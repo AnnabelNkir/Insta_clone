@@ -26,3 +26,11 @@ def profile(request):
     pics = Image.objects.filter(user_id=current_user.id)
     profile = Profile.objects.filter(user_id=current_user.id).first()
     return render(request, 'profile.html', {"pics": pics, "profile": profile})
+
+@login_required(login_url='/accounts/login/')
+def profile(request):
+    current_user = request.user
+    pics = Image.objects.filter(user_id=current_user.id)
+    profile = Profile.objects.filter(user_id=current_user.id).first()
+    return render(request, 'profile.html', {"pics": pics, "profile": profile})
+

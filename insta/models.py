@@ -7,7 +7,6 @@ from django.db.models.fields import related
 # Create your models here.
 class Image(models.Model):
     # title field
-
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
     image = CloudinaryField('image')
     title = models.CharField(max_length=50)
