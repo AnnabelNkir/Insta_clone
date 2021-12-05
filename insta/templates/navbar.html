@@ -1,40 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top navi">
-      
-      <a class="nav-link active text-white" aria-current="page" href="/">  &nbsp; Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
-          <div class="navbar-nav text-white">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a style ="color:black;" href="/admin" class="nav-item text-white" active-color="black"><i class="fas fa-user-tie text-white"></i>&nbsp; &nbsp;Admin</a>
-              </li>
-            </ul>
-          </div>
+  
+      <nav style="overflow: hidden; position: fixed; z-index: 1; top: 0; width: 100%; padding: 30px; background: linear-gradient(hsla(177, 75%, 54%, 0.308), rgba(243, 115, 226, 0.171) );" class="navbar">
 
-        </div>
-        <div class="col-sm-4 col-md-4 navbar-right">
+          <a  href="/home"><section class="logo-section"><img class="logo" src="https://localglimpse.com/wp-content/uploads/2017/03/Instagram.png"/>
+            <div></div><img class="logoname" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/2000px-Instagram_logo.svg.png"/>
+          </section></a>
+          <form class="search-section" role="search" action="{% url 'search_results' %}">
+            
+            <input type="search" class="input-search form-control" placeholder="&#x1F50D; Search" name="username">
 
-            <form class="navbar-form" role="search" action="">
+          </form>
+          
+              {% if user.is_authenticated %}
+              <section  class="icons-section"><a style="font-size: 35px;" class="fa fa-compass" href="#"></a><a style="font-size: 35px;" class="fa fa-heart-o" href="#"></a><a style="font-size: 35px;" class="fa fa-user-o" href="/profile/"></a><a data-toggle="modal" data-target="#settings" style="font-size: 35px;" class="fa fa-th" aria-hidden="true" href="#"></a></section>
+              {% else %}
+             
+                <a class='btn btn-default' href="/accounts/login">Login</a>
+              
+  
+              {% endif %}
+            </div>
+      </nav>   
+           
+          
     
-              <div class="input-group">
-                <input type="text" class="form-control rounded-pill" placeholder="Search photos" name="photos">
-                <div class="input-group-btn">
-                  <button class="btn btn-default" type="submit"><i class="fa fa-search text-white" aria-hidden="true"></i></button>
-                </div>
+      <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                  <div class="modal-body">
+                      <ul class="list-group">
+                      <li class="list-group-item text-center"><a href="/accounts/password/change">Change Password</a></li>
+                      <li class="list-group-item text-center"><a href="/logout/">Log Out</a></li>
+                      <li class="list-group-item text-center"><a data-dismiss="modal">Cancel</a></li>
+                      </ul>
+                  </div>
               </div>
-    
-            </form>
           </div>
-    </nav>
+      </div>
 </body>
 </html>
