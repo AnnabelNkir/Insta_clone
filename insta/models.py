@@ -1,49 +1,45 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
-import datetime as dt
-from django.contrib.auth.models import User
 from django.db.models.fields import related
+from django.contrib.auth.models import User
 
-# Create your models here.
-class Image(models.Model):
-    # title field
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
+
+# Create your models here
+class Images(models.Model):
     image = CloudinaryField('image')
-    title = models.CharField(max_length=50)
-    caption = models.TextField()
-    post_date = models.DateTimeField(auto_now_add=True,null=True)
-    profile = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-
+    name = models.CharField(max_length=50)
+    caption = models.TextField(max_length=2000)
+    pub_date = models.DateTimeField(auto_now_add=True,null=True)
+    likes_count = models.IntegerField(default=0)
+    comm_count = models.IntegerField(default=0)
+    profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='image',null=True)
     def __str__(self):
-        return self.title
+        return self.name
 
-    def save_images(self):
+    def update_caption(self, new_caption):
+        self.image_caption = new_caption
         self.save()
-
-        # delete image
-    def delete_image(self):
-        self.delete()
 
     @classmethod
     def get_images_by_user(cls, user):
         images = cls.objects.filter(user=user)
         return images
 
-
-    def update_images(self, title, caption):
-        self.title = title
-        self.caption = caption
+    def save_image(self):
         self.save()
 
-    # get all images
+    def delete_image(self):
+        self.delete()
+
     @classmethod
-    def get_all_images(cls):
-        today = dt.date.today()
-        images = Image.objects.all(post_date__date = today)
+    def search_by_image_name(cls, search_term):
+        images = cls.objects.filter(
+            image_name__icontains=search_term)
         return images
     
-    class Profile(models.Model):
-     prof_photo = CloudinaryField('image')
+class Profile(models.Model):
+    prof_photo = CloudinaryField('image')
     bio = models.TextField(max_length=1000, blank=True, null=True)
     phone_number = models.CharField(max_length=10, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE,null=True)
@@ -63,4 +59,26 @@ class Image(models.Model):
     @classmethod
     def get_profile_by_user(cls, user):
         profile = cls.objects.filter(user=user)
-        return 
+        return profile
+
+class Likes(models.Model):
+    image = models.ForeignKey(Images, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user
+
+class Comments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ForeignKey(Images, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=50)
+    comm_date = models.DateTimeField(auto_now_add=True)
+
+    def save_comment(self):
+        self.save()
+    
+    def delete_comment(self):
+        self.delete()
+
+    def __str__(self):
+        return self.comm_date
