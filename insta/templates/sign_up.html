@@ -23,22 +23,26 @@
         </div>
         <div class="card-body">
 
-          <form  action="/accounts/login/" method="post">
-            {% csrf_token %}
-            {% bootstrap_form form%}
-
-            <div class="form-group">
-              <input type="submit" class="btn btn-primary btn-sm" value="Login">
-            </div>
-
-            <input type="hidden" name="next" value="{{next}}">
-
-          </form>
+            <form method="post">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <p>
+                    {{ field.label_tag }}<br>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <small style="display: none">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                    <p style="color: rgb(228, 46, 46)">{{ error }}</p>
+                    {% endfor %}
+                </p>
+                {% endfor %}
+                <button class="btn btn-outline-success" type="submit">Sign up</button>
+            </form>
 
         </div>
-        <div class="card-footer">
-            <small class="text-muted">Create an account <a href="/signup">Click here</a></small>
-        </div>
+        
       </div>
 
     </div>

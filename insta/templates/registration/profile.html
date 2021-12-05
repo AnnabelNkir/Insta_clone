@@ -1,0 +1,79 @@
+{%extends "registration/base.html"%}
+{% block content %}
+{% load bootstrap4 %}
+
+<div style="padding-top: 110px;" class="container">
+  
+
+<div class="row">
+  <div class="col-md-5">
+      {% if profile.profile_pic %}
+      <section> <img  data-toggle="modal" data-target="#exampleModalCenter" style="border-radius: 50% ; padding: 0.15rem;  background: linear-gradient(to right bottom, #d82c66, #c92e3b, #e15e43, #f3813f, #ffa63e);" class=" img-circle"
+      src="{{ profile.profile_pic.url}}" alt="" width="300px" height="300px"> {{ photos_item.profile.user.username}}</section> 
+      {% else %}
+      <img  data-toggle="modal" data-target="#exampleModalCenter" style="border-radius: 50% ; padding: 0.15rem;   background: linear-gradient(to right bottom, #d82c66, #c92e3b, #e15e43, #f3813f, #ffa63e);" class=" img-circle"
+      src="https://www.bristolbrewing.com/wp-content/uploads/2017/08/default-avatar.png" alt="" width="300px" height="300px""> {{ photos_item.profile.user.username}}</section>            
+      {% endif %}
+  </div>
+  <div class="col-md-7">
+      <h4>{{profile.user.username}}</h4>
+      <p>{{profile.bio}}</p>
+      
+      <button data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-outline-info">Edit profile <i class="fa fa-cog fa-spin" style="font-size:24px"></i></button>
+  </div>
+</div>
+        
+
+        
+          
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalCenterTitle"><h3 class="text-center"><img width="200px" height="80px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/2000px-Instagram_logo.svg.png" alt=""></h3></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                Note: Refresh your page to see the profile photo
+                <hr>
+                    <form  action="{%url 'profile'%}" method="post" enctype="multipart/form-data">
+                      {%csrf_token%}
+                  
+                      {% bootstrap_form form%}
+                      <a href="/profile/"><input type="submit" class="btn btn-success btn-sm" value="Post"></a> 
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+
+<hr>
+{% if posts%}
+<div class="row">
+  {% for posts_items in posts%}
+      <div class="col-md-4 col-sm-4 col-lg-4 col-xs-4">
+          
+        <img src="{{posts_items.image.url}}" width="300px" height="300px" alt="">
+  
+      </div>
+  {% endfor%}
+</div>
+  {% else%}
+
+{% endif%}
+
+  
+
+   {% block scripts %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  {% bootstrap_javascript %} {% endblock %}
+</div>
+{% endblock %}
