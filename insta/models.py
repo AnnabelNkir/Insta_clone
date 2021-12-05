@@ -1,84 +1,79 @@
 from django.db import models
-from cloudinary.models import CloudinaryField
-from django.db.models.fields import related
 from django.contrib.auth.models import User
+from tinymce.models import HTMLField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-
-# Create your models here
-class Images(models.Model):
-    images = CloudinaryField('image')
-    name = models.CharField(max_length=50)
-    caption = models.TextField(max_length=2000)
-    post_date = models.DateTimeField(auto_now_add=True,null=True)
-    likes_count = models.IntegerField(default=0)
-    comm_count = models.IntegerField(default=0)
-    profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='image',null=True)
-    def __str__(self):
-        return self.name
-
-    def update_caption(self, new_caption):
-        self.image_caption = new_caption
-        self.save()
-
-    @classmethod
-    def get_images_by_user(cls, user):
-        images = cls.objects.filter(user=user)
-        return images
-
-    def save_image(self):
-        self.save()
-
-    def delete_image(self):
-        self.delete()
-
-    @classmethod
-    def search_by_image_name(cls, search_term):
-        images = cls.objects.filter(
-            image_name__icontains=search_term)
-        return images
-    
+# Create your models here.
 class Profile(models.Model):
-    prof_photo = CloudinaryField('image')
-    bio = models.TextField(max_length=1000, blank=True, null=True)
-    phone_number = models.CharField(max_length=10, blank=True, null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile')
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    bio = models.CharField(max_length=200)
+    profile_pic = models.ImageField(upload_to='profile/')
+    pub_date_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.phone_number
+        return self.first_name
 
     def save_profile(self):
-        self.save()
-
-    def update_profile(self):
         self.save()
 
     def delete_profile(self):
         self.delete()
 
     @classmethod
-    def get_profile_by_user(cls, user):
-        profile = cls.objects.filter(user=user)
-        return profile
+    def get_profiles(cls):
+        profiles = cls.objects.all()
+        return profiles
+    
+    @classmethod
+    def search_by_username(cls,search_term):
+        profiles = cls.objects.filter(title__icontains=search_term)
+        return profiles
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
 
-class Likes(models.Model):
-    image = models.ForeignKey(Images, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+class Image(models.Model):
+    image = models.ImageField(upload_to='images/')
+    image_name = models.CharField(max_length=30)
+    image_caption = models.CharField(max_length=30)
+    image_location = models.CharField(max_length=30,null=True)
+    
+    profile = models.ForeignKey(Profile,on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True, null=True)
+    posted_time = models.DateTimeField(auto_now_add=True,)
+    likes = models.PositiveIntegerField(default=0)
 
-    def __str__(self):
-        return self.user
+    class Meta:
+        ordering = ['-posted_time']
+
+    def save_images(self):
+        self.save()
+    
+    @classmethod
+    def get_images(cls):
+        images = cls.objects.all()
+        return images
 
 class Comments(models.Model):
+    comment = models.CharField(max_length = 300)
+    posted_on = models.DateTimeField(auto_now=True)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ForeignKey(Images, on_delete=models.CASCADE)
-    comment = models.CharField(max_length=50)
-    comm_date = models.DateTimeField(auto_now_add=True)
 
     def save_comment(self):
         self.save()
-    
+
     def delete_comment(self):
         self.delete()
 
-    def __str__(self):
-        return self.comm_date
+    @classmethod
+    def get_comments_by_images(cls, id):
+        comments = Comments.objects.filter(image__pk = id)
+        return comments
