@@ -2,43 +2,29 @@
 
 {% block content %}
 {{block.super}}
-
-
-   
-
-   <div class="content">
-      <div class="container-full">
-        <div class="px-lg-5 content">
-          <!-- display default password and username  -->
-          <div class="row imgs">
-            {% for pic in image %}
-              <!-- Gallery Photo item start -->
-              <div class="col-lg-12 col-md-12 mb-4">
-                <div class="bg-white rounded shadow-sm"><img src="{{ pic.image.url }}" alt=""
-                    class="img-fluid card-img-top">
-                  <div class="p-4">
-                    <h5 class="headings text-center"> {{ pic.title }}</h5>
-                    <div class="d-flex justify-content-between">
-                      <div>
-                        <div class="text-muted">
-                          <span class="text-dark text-capitalize">{{ pic.caption }}</span>
-                        </div>
-                      </div>
-                      <div>
-                        <small class="text-muted">
-                          <span class="badge rounded-pill bg-dark text-white text-capitalize">{{ pic.post_date|date }}</span>
-                        </small>
-                      </div>
-                  </div>
-                  </div>
-              </div>
-             </div>
-             {% endfor%}
-          </div>
-          </div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      {% for pic in image %}
+      <div class="card" style="width: 40rem;">
+        <img class="card-img-top" src="{{pic.image.url}}" alt="{{pic.name}}">
+        <div class="card-body">
+          <h5 class="card-title">{{pic.name}}</h5>
+          <p class="card-text">{{pic.caption}}</p>
+          <a href="#">{{pic.name}}</a>
+        </div>
+      </div> 
+      {% endfor%}
+    </div><hr>
+    <div class="col-md-6">
+      <div class="d-flex align-img-right">
+        {% if profile.prof_photo %}
+        <img class="prof" src="{{profile.prof_photo.url}}" alt="">
+        {%else%}
+        <img class="prof" src="https://unsplash.com/photos/_tF3vug2FhQ" alt=""> 
+        {% endif %}   
       </div>
+    </div>
   </div>
-  
-
-
+</div>
 {% endblock %}
