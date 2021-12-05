@@ -1,0 +1,34 @@
+{% extends "all-photos/base.html" %}
+{% block content %}
+<section class="profile container">
+    <div class=" mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    {% if profile.prof_photo %}
+                    <img src="{{profile.prof_photo.url}}" alt="" class="card-img-top">
+                    {%else%}
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3aV6aq2LNho3SY8cDICGVEdRweW5u9IaZ_w&usqp=CAU"
+                        class="card-img-top" alt="My profile picture">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h4 class="card-text">
+                            {{ user.first_name }} {{ user.last_name }}
+                        </h4>
+                        <p>{{ user.username }}</p>
+                        <p>
+                            {% if profile.bio %}
+                            <small>{{ profile.bio }}</small>
+                            {% else %}
+                            <span class="text-danger">No about me</span>
+                            {% endif %}
+                        </p>
+                        <h6>Joined on: <span class="badge rounded-pill bg-secondary text-white">
+                                {{ user.date_joined }} </span></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
