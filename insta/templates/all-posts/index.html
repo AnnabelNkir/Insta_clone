@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  
+      <nav style="overflow: hidden; position: fixed; z-index: 1; top: 0; width: 100%; padding: 30px; background: linear-gradient(hsla(177, 75%, 54%, 0.308), rgba(243, 115, 226, 0.171) );" class="navbar">
+
+          <a  href="/home"><section class="logo-section"><img class="logo" src="https://localglimpse.com/wp-content/uploads/2017/03/Instagram.png"/>
+            <div></div><img class="logoname" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/2000px-Instagram_logo.svg.png"/>
+          </section></a>
+          <form class="search-section" role="search" action="{% url 'search_results' %}">
+            
+            <input type="search" class="input-search form-control" placeholder="&#x1F50D; Search" name="username">
+
+          </form>
+          
+              {% if user.is_authenticated %}
+              <section  class="icons-section"><a style="font-size: 35px;" class="fa fa-compass" href="#"></a><a style="font-size: 35px;" class="fa fa-heart-o" href="#"></a><a style="font-size: 35px;" class="fa fa-user-o" href="/profile/"></a><a data-toggle="modal" data-target="#settings" style="font-size: 35px;" class="fa fa-th" aria-hidden="true" href="#"></a></section>
+              {% else %}
+             
+                <a class='btn btn-default' href="/accounts/login">Login</a>
+              
+  
+              {% endif %}
+            </div>
+      </nav>   
+           
+          
+    
+      <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                  <div class="modal-body">
+                      <ul class="list-group">
+                      <li class="list-group-item text-center"><a href="/accounts/password/change">Change Password</a></li>
+                      <li class="list-group-item text-center"><a href="/logout/">Log Out</a></li>
+                      <li class="list-group-item text-center"><a data-dismiss="modal">Cancel</a></li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+</body>
+</html>

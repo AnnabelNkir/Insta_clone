@@ -1,79 +1,107 @@
 from django.db import models
 from django.contrib.auth.models import User
-from tinymce.models import HTMLField
-from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db.models.signals import post_save
 
-# Create your models here.
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile')
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    bio = models.CharField(max_length=200)
-    profile_pic = models.ImageField(upload_to='profile/')
-    pub_date_created = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return self.first_name
-
-    def save_profile(self):
-        self.save()
-
-    def delete_profile(self):
-        self.delete()
-
-    @classmethod
-    def get_profiles(cls):
-        profiles = cls.objects.all()
-        return profiles
-    
-    @classmethod
-    def search_by_username(cls,search_term):
-        profiles = cls.objects.filter(title__icontains=search_term)
-        return profiles
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
 class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
-    image_name = models.CharField(max_length=30)
-    image_caption = models.CharField(max_length=30)
-    image_location = models.CharField(max_length=30,null=True)
-    
-    profile = models.ForeignKey(Profile,on_delete=models.CASCADE, blank=True, null=True)
-    user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True, null=True)
-    posted_time = models.DateTimeField(auto_now_add=True,)
-    likes = models.PositiveIntegerField(default=0)
+  image = models.ImageField(upload_to='instaimages/')
+  name = models.CharField(max_length=60)
+  caption = models.TextField()
+  user = models.ForeignKey(User,on_delete = models.CASCADE)
 
-    class Meta:
-        ordering = ['-posted_time']
+  def save_image(self):
+     self.save()
 
-    def save_images(self):
-        self.save()
-    
-    @classmethod
-    def get_images(cls):
-        images = cls.objects.all()
-        return images
+  @classmethod
+  def display_images(cls):
+    images = cls.objects.all()
+    return images
 
-class Comments(models.Model):
-    comment = models.CharField(max_length = 300)
-    posted_on = models.DateTimeField(auto_now=True)
-    image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+  @property
+  def all_comments(self):
+    return self.comments.all()
 
-    def save_comment(self):
-        self.save()
+  @property
+  def all_likes(self):
+    return self.imagelikes.count()
 
-    def delete_comment(self):
-        self.delete()
+  @classmethod
+  def search_images(cls,search_term):
+    images = cls.objects.filter(name__icontains = search_term).all()
+    return images
 
-    @classmethod
-    def get_comments_by_images(cls, id):
-        comments = Comments.objects.filter(image__pk = id)
-        return comments
+  def delete_post(self):
+    self.delete()
+
+  def __str__(self):
+    return "%s image" % self.name
+
+class Like(models.Model):
+  like = models.BooleanField()
+  image = models.ForeignKey(Image, on_delete = models.CASCADE,related_name='imagelikes')
+  user = models.ForeignKey(User,on_delete = models.CASCADE,related_name='userlikes')
+
+  def __str__(self):
+    return "%s like" % self.image
+
+class Comment(models.Model):
+  comment = models.TextField()
+  image = models.ForeignKey(Image,on_delete = models.CASCADE,related_name='comments')
+  user = models.ForeignKey(User,on_delete = models.CASCADE,related_name='comments')
+
+  @classmethod
+  def display_comments_by_imageId(cls,image_id):
+    comments = cls.objects.filter(image_id = image_id)
+    return comments
+
+  def __str__(self):
+    return "%s comment" % self.image
+
+class Profile(models.Model):
+  profile_pic = models.ImageField(default='default.jpg',upload_to='profile/')
+  bio = models.TextField()
+  user = models.OneToOneField(User,on_delete = models.CASCADE)
+
+
+  @receiver(post_save , sender = User)
+  def create_profile(instance,sender,created,**kwargs):
+    if created:
+      Profile.objects.create(user = instance)
+
+  @receiver(post_save,sender = User)
+  def save_profile(sender,instance,**kwargs):
+    instance.profile.save()
+
+  @property
+  def all_followers(self):
+    return self.followers.count()   
+
+  @property
+  def all_following(self):
+    return self.following.count() 
+
+
+  @property
+  def follows(self):
+    return [follow.followee for follow in self.following.all()]
+
+  @property
+  def following(self):
+    return self.followers.all()
+
+
+
+  @classmethod
+  def search_profiles(cls,search_term):
+    profiles = cls.objects.filter(user__username__icontains = search_term).all()
+    return profiles
+
+  def __str__(self):
+    return "%s profile" % self.user
+
+class Follows(models.Model):
+  follower = models.ForeignKey(Profile, related_name='following',on_delete = models.CASCADE)
+  followee = models.ForeignKey(Profile, related_name='followers',on_delete = models.CASCADE)
+
+  def __str__(self):
+    return "%s follower" % self.follower
