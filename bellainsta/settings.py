@@ -17,6 +17,10 @@ import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import django_heroku
+import dj_database_url
+from decouple import config
+
 
 MODE=config("MODE", default="dev")
 SECRET_KEY = config('SECRET_KEY')
@@ -60,6 +64,7 @@ INSTALLED_APPS = [
     'insta',
     'cloudinary',
     'bootstrap4',
+    'tinymce',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

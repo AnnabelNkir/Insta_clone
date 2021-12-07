@@ -1,161 +1,143 @@
-from django.shortcuts import render,redirect
-from django.http import Http404
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
-from . forms import Registration,UpdateUser,UpdateProfile,CommentForm,postImageForm
-from django.contrib.auth.decorators import login_required
-from .models import Image,Profile,Like,Follows
-from django.http import JsonResponse
+from django.shortcuts import render,redirect,get_object_or_404
+from django.http  import HttpResponse
+import datetime as dt
 from django.contrib.auth.models import User
-# from .email import send_welcome_email
+from django.contrib.auth.decorators import login_required
+from .forms import ImageForm, SignupForm, CommentForm, EditForm
+from django.db import models
+from .models import Image,Profile
+# Create your views here.
 
+from django.contrib.auth import login, authenticate
 
-def register(request):
-  if request.method == 'POST':
-    form = Registration(request.POST)
-    if form.is_valid():
-      form.save()
-      email = form.cleaned_data['email']
-      username = form.cleaned_data.get('username')
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 
-      messages.success(request,f'Account for {username} created,you can now login')
-      return redirect('login')
-  else:
-    form = Registration()
-  return render(request,'registration/registration_form.html',{"form":form})
-
-
-@login_required
-def profile(request):
-  current_user = request.user
-  images = Image.objects.filter(user_id = current_user.id).all()
-  
-  return render(request,'all-photos/profile.html',{"images":images,"current_user":current_user})
-
-@login_required
-def index(request):
-  comment_form = CommentForm()
-  post_form = postImageForm()
-  images = Image.display_images()
-  users = User.objects.all()
-  
-  return render (request,'all-photos/index.html',{"images":images,"comment_form":comment_form,"post":post_form,"all":users})
-
-@login_required
-def update_profile(request):
-  if request.method == 'POST':
-    u_form = UpdateUser(request.POST,instance=request.user)
-    p_form = UpdateProfile(request.POST,request.FILES,instance=request.user.profile)
-    if u_form.is_valid() and p_form.is_valid():
-      u_form.save()
-      p_form.save()
-      messages.success(request,'Your Profile account has been updated successfully')
-      return redirect('profile')
-  else:
-    u_form = UpdateUser(instance=request.user)
-    p_form = UpdateProfile(instance=request.user.profile) 
-  params = {
-    'u_form':u_form,
-    'p_form':p_form
-  }
-  return render(request,'all-photos/update_profile.html',params)
-
-@login_required
-def commenting(request,image_id):
-  c_form = CommentForm()
-  image = Image.objects.filter(pk = image_id).first()
-  if request.method == 'POST':
-    c_form = CommentForm(request.POST)
-    if c_form.is_valid():
-      comment = c_form.save(commit = False)
-      comment.user = request.user
-      comment.image = image
-      comment.save() 
-  return redirect('index')
-
-@login_required
-def likes(request,image_id):
-  if request.method == 'GET':
-    image = Image.objects.get(pk = image_id)
-    user = request.user
-    check_user = Like.objects.filter(user = user,image = image).first()
-    if check_user == None:
-      image = Image.objects.get(pk = image_id)
-      like = Like(like = True,image = image,user = user)
-      like.save()
-      return JsonResponse({'success':True,"img":image_id,"status":True})
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your Instagram account.'
+            message = render_to_string('acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':account_activation_token.make_token(user),
+            })
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+            return HttpResponse('Please confirm your email address to complete the registration')
     else:
-      check_user.delete()
-      return JsonResponse({'success':True,"img":image_id,"status":False})
- 
+        form = SignupForm()
+    return render(request, 'signup.html', {'form': form})
 
 
-@login_required
-def allcomments(request,image_id):
-  image = Image.objects.filter(pk = image_id).first()
-  return render(request,'all-photos/imagecomments.html',{"image":image})
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        # return redirect('home')
+        return HttpResponse('Thank you for your email confirmation. Now you can <a href="/accounts/login/">Login</a>  your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
-
-@login_required
-def search(request):
-  if 'search_user' in request.GET and request.GET["search_user"]:
-    name = request.GET.get('search_user')
-    the_users = Profile.search_profiles(name)
-    images = Image.search_images(name)
-    print(the_users) 
-    return render(request,'all-photos/search.html',{"users":the_users,"images":images})
-  else:
-    return render(request,'all-photos/search.html')
-
-
-@login_required
-def post(request):
-  if request.method == 'POST':
-    post_form = postImageForm(request.POST,request.FILES) 
-    if post_form.is_valid():
-      the_post = post_form.save(commit = False)
-      the_post.user = request.user
-      the_post.save()
-  return redirect('index')
-
-@login_required
-def others_profile(request,pk):
-  user = User.objects.get(pk = pk)
-  images = Image.objects.filter(user = user)
-  c_user = request.user
-  
-  return render(request,'all-photos/othersprofile.html',{"user":user,"images":images,"c_user":c_user})
-
-@login_required
-def follow(request,user_id):
-  followee = request.user
-  followed = Follows.objects.get(pk=user_id)
-  follow_data = Follows(follower = followee.profile,followee = followed.profile)
-  follow_data.save()
-  return redirect('others_profile')
-
-@login_required
-def unfollow(request,user_id):
-  followee = request.user
-  follower = Follows.objects.get(pk=user_id)
-  follow_data = Follows.objects.filter(follower = follower,followee = followee).first()
-  follow_data.delete()
-  return redirect('others_profile')
-
-@login_required
-def delete(request,image_id):
-  image = Image.objects.get(pk=image_id)
-  if image:
-    image.delete_post()
-  return redirect('profile')
+def home(request):
+    date = dt.date.today()
+    
+    return render(request, 'registration/homepage.html', {"date": date,})
 
 
 
+@login_required(login_url='/home')
+def index(request):
+    date = dt.date.today()
+    photos = Image.objects.all()
+    # print(photos)
+    profiles = Profile.objects.all()
+    # print(profiles)
+    form = CommentForm()
 
-@login_required
-def deleteaccount(request):
-  
-  current_user = request.user
-  account = User.objects.get(pk=current_user.id)
-  account.delete()
-  return redirect('register')
+    return render(request, 'all-posts/index.html', {"date": date, "photos":photos, "profiles":profiles, "form":form})
+
+def new_image(request):
+    current_user = request.user
+    profile = Profile.objects.get(user=current_user)
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            image = form.save(commit=False)
+            image.user = current_user
+            image.profile = profile
+            image.save()
+        return redirect('index')
+
+    else:
+        form = ImageForm()
+    return render(request, 'new_image.html', {"form": form})
+
+def profile(request):
+    date = dt.date.today()
+    current_user = request.user
+    profile = Profile.objects.get(user=current_user.id)
+    print(profile.profile_pic)
+    posts = Image.objects.filter(user=current_user)
+    if request.method == 'POST':
+        signup_form = EditForm(request.POST, request.FILES,instance=request.user.profile) 
+        if signup_form.is_valid():
+           signup_form.save()
+    else:        
+        signup_form =EditForm() 
+    
+    return render(request, 'registration/profile.html', {"date": date, "form":signup_form,"profile":profile, "posts":posts})
+
+@login_required(login_url='/accounts/login/')
+def comment(request,image_id):
+    #Getting comment form data
+    if request.method == 'POST':
+        image = get_object_or_404(Image, pk = image_id)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.image = image
+            comment.save()
+    return redirect('index')
+    
+
+@login_required(login_url='/accounts/login/')
+def search_results(request):
+    if 'username' in request.GET and request.GET["username"]:
+        search_term = request.GET.get("username")
+        searched_users = User.objects.filter(username=search_term)
+        message = f"{search_term}"
+        profiles=  Profile.objects.all( )
+        
+        return render(request, 'all-posts/search.html',{"message":message,"users": searched_users,'profiles':profiles})
+
+    else:
+        message = "You haven't searched for any term"
+        return render(request, 'all-posts/search.html',{"message":message})
+
+def profiles(request,id):
+    profile = Profile.objects.get(user_id=id)
+    post=Image.objects.filter(user_id=id)
+                       
+    return render(request,'profiles_each.html',{"profile":profile,"post":post})
