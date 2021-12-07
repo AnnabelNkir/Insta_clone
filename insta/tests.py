@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class TestImages(TestCase):
   '''
-  Class where we write our image models tests
+  Class:image models tests
   '''
   def setUp(self):
     '''
