@@ -16,7 +16,7 @@
                                                 src="{{ photos_item.profile.profile_pic.url}}" alt="" width="50px" height="50px""> <a href="/profiles/{{ photos_item.profile.user.id}}" style="color:black">{{ photos_item.profile.user.username}}</a> <img src="https://cdn.shopify.com/s/files/1/2080/4695/products/1495368559287_1024x1024.png?v=1532767427" alt="" height="20px"> </section> <br>
                                                         {% else %}
                                                         <img style="border-radius: 50% ; padding: 0.15rem;  width: 45px; background: linear-gradient(to right bottom, #d82c66, #c92e3b, #e15e43, #f3813f, #ffa63e);" class=" img-circle"
-                                                        src="https://www.bristolbrewing.com/wp-content/uploads/2017/08/default-avatar.png" alt="" width="50px" height="50px"> <a href="/profiles/{{ photos_item.profile.user.id}}" style="color:black">{{ photos_item.profile.user.username}}</a></section> <br> 
+                                                        src="https://www.bristolbrewing.com/wp-content/uploads/2017/08/default-avatar.png" alt="" width="50px" height="50px""> <a href="/profiles/{{ photos_item.profile.user.id}}" style="color:black">{{ photos_item.profile.user.username}}</a></section> <br> 
                                                                         
                                                         {% endif %}
                                 </div>
@@ -73,7 +73,7 @@
                         {% endfor %}
                 </div>
                 
-                <div style="overflow: hidden; position: relative ; z-index: 1; top: 0;" class="col-md-6">
+                <div style="overflow: hidden; position: absolute ; z-index: 1; top: 0;" class="col-md-6">
                         <div class="row">
                                 <div class="col-md-6">
                                                 <img src="https://media.giphy.com/media/uo6rcjwHSAFsQ/giphy.gif" alt="" height="100px">
@@ -87,7 +87,7 @@
                                 <div class="card">
                         {% else %}
                                 <img style="border-radius: 50% ; padding: 0.15rem;  background: linear-gradient(to right bottom, #d82c66, #c92e3b, #e15e43, #f3813f, #ffa63e);" class=" img-circle"
-                                src="https://www.bristolbrewing.com/wp-content/uploads/2017/08/default-avatar.png" alt="" width="70px" height="70px"> {{ user.username}}</section> 
+                                src="https://www.bristolbrewing.com/wp-content/uploads/2017/08/default-avatar.png" alt="" width="70px" height="70px""> {{ user.username}}</section> 
                                         
                         {% endif %}
                         
@@ -100,7 +100,7 @@
                                                                         src="{{profiles_item.user.profile.profile_pic.url}}" alt="" width="50px" height="50px"> {{ profiles_item.user.username}}</section> <br>
                                                         {% else %}
                                                                 <img style="border-radius: 50% ; padding: 0.15rem; background: linear-gradient(to right bottom, #d82c66, #c92e3b, #e15e43, #f3813f, #ffa63e);" class=" img-circle"
-                                                                src="https://www.bristolbrewing.com/wp-content/uploads/2017/08/default-avatar.png" alt="" width="50px" height="50px""> {{ profiles_item.user.username}}</section> <br> 
+                                                                src="https://www.bristolbrewing.com/wp-content/uploads/2017/08/default-avatar.png" alt="" width="50px" height="50px"> {{ profiles_item.user.username}}</section> <br> 
                                                                         
                                                         {% endif %}
                                                       
@@ -114,7 +114,7 @@
                                 {% endfor %}
                         </div>
                         <p style="font-size:10px;" class="text-muted">&middot;About Us &middot;Support &middot;Press  &middot;API &middot;Privacy &middot;Terms & Conditions &middot;HashTags</p>
-                        <p style="font-size:10px;" class="text-muted"> © 2018 INSTAGRAM</p>
+                        <p style="font-size:10px;" class="text-muted"> © 2021 INSTAGRAM</p>
                         
                 </div>
                 </div>
