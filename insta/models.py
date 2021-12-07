@@ -42,14 +42,14 @@ def save_user_profile(sender, instance, **kwargs):
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
     image_name = models.CharField(max_length=30,default="Some String")
-    image_caption = HTMLField(blank=True)
+    image_caption = models.CharField(max_length = 300)
     image_location = models.CharField(max_length=30,null=True)
     
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True, null=True)
     post_date = models.DateTimeField(auto_now=True)
 
-    likes = models.PositiveIntegerField(default=0)
+    likes = models.PositiveIntegerField(default=5)
 
     class Meta:
         ordering =('-post_date',)
