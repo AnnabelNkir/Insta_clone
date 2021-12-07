@@ -1,101 +1,51 @@
-{% extends 'main/base.html' %}
+{%extends 'all-posts/base.html'%}
+{% load bootstrap4 %}
+{% load static%}
 
 {% block content %}
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-
-<style>
-.row1,.row2{
-  display: flex;
-}
-</style>
-
-<div class="container">
-  <div class="row mb-4 pt-4">
-    <div class="col-sm-4">
-      <img src="{{user.profile.profile_pic.url}}" alt="{{user.profile_pic.url}}" width="200" height="200" class="rounded-circle account-img">
-    </div>
-    <div class="col-sm-8">
-      <section>
-        <div class="row1">
-          <h3 class="text-monospace">{{user.username}}</h3>
-        </div>
-      
-        <div class="row2 mt-3">
-          <p class="text-monospace">{{images|length}} posts</p>
-          <p class="text-monospace ml-3">{{user.profile.all_followers}} followers</p>
-          <p class="text-monospace ml-3">{{user.profile.all_following}} following</p>
-        </div>
-        <div class="row3 mt-3">
-          <p class="text-monospace font-weight-bold">{{user.username}}</p>
-          <p class="text-monospace">{{user.profile.bio}}</p>
-        </div>
-      </section>
-   
-      <div>
-        <ul class="nav" id="my" role="tablist">
-          <li class="nav-item">
-            <a href="#posts" class="nav-link text-monospace font-weight-bold"data-toggle="tab" role="tab" aria-controls="posts" aria-selected="false"><i class="far fa-calendar-plus"></i>
-              POSTS
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#igtv" class="nav-link text-monospace font-weight-bold ml-3"data-toggle="tab" role="tab" aria-controls="posts" aria-selected="false"><i class="fas fa-tv"></i>
-              IGTV
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#saved" class="nav-link text-monospace font-weight-bold ml-3"data-toggle="tab" role="tab" aria-controls="posts" aria-selected="false"><i class="far fa-bookmark"></i>
-              SAVED
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#tagged" class="nav-link text-monospace font-weight-bold ml-3"data-toggle="tab" role="tab" aria-controls="posts" aria-selected="false"><i class="fas fa-user-tag"></i>
-              TAGGED
-            </a>
-          </li>
-        </ul>
-      </div>
-
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-              <div class="modal-body">
-                  <p class="text-monospace">
-                    <a href="{% url 'logout' %}" class="tooltip-test" title="Tooltip">Logout</a>
-                  </p>
-                  <p class="text-monospace">
-                    <a href="#" class="tooltip-test" title="Tooltip">Change Password</a>
-                  </p>
-                  <a class="modaloption button" data-dismiss="modal">
-                      Cancel
-                  </a>
-              </div>
+ <img src="https://media.giphy.com/media/uo6rcjwHSAFsQ/giphy.gif" alt="" height="100px">
+<div style="  padding-top: 100px;" class="container">
+    <div class="row">
+        <div class="col-md-4 ">
+            <div class="lay">
+                
             </div>
-          </div>
+            <img src="/static/mypics/instaQR.jpg" alt="dong">
+
         </div>
-      </div>
- 
-  </div>
-</div>
-</div>
-<div class="container-fluid">
-  <div class="tab-content row col-12" id="myContent">
-    <div class="tab-pane fade show active " id="posts" role="tabpanel">
-      {% include 'auth/posts.html' %}
-    </div>
-    <div class="tab-pane fade" id="igtv" role="tabpanel">
-      {% include 'auth/igtv.html' %}
-    </div>
-    <div class="tab-pane fade" id="saved" role="tabpanel">
-        <p>saved</p>
-    </div>
-    <div class="tab-pane fade" id="tagged" role="tabpanel">
-        <p>Tagged</p>
-    </div>
- </div>
-</div>
+        <div class="col-md-4"> 
 
-
-
-{% endblock %}
+        </div>
+        <div class="col-md-4">
+            <div class="signup-fields">
+                <div class="card">
+                    <div style="text-align:center;" class="card-header">
+                        <img width="200px" height="80px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/2000px-Instagram_logo.svg.png" alt="">
+                    </div>
+                    <div style="text-align:center;" class="card-body">
+                            {% if user.profile.photo %}
+                            <img  src="https://briefbox.me/wp-content/themes/briefbox/assets/images/default-avatar.png" alt="profile" class="img-thumbnail rounded-circle">
+                            {% else %}
+                            <img  src="https://briefbox.me/wp-content/themes/briefbox/assets/images/default-avatar.png" alt="random" class="img-thumbnail rounded-circle">
+                            {% endif %}
+                    </div>
+                    <div class="card-footer">
+                            <div>
+                                {%if request_user == AnonymousUser%}
+                                
+                                        <a href="/accounts/login" class = "btn btn-sm btn-primary btn-inline"> Continue as {{request.user}}? </a>
+                                    
+                                {% endif%}
+                                    <p class="log" style="display:block">Not {{request.user}}? <a href="/signup">Create Account</a></p>
+                            </div>
+                    </div>
+                        
+                        
+                         
+                    
+                </div>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
