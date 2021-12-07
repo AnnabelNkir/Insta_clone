@@ -7,8 +7,8 @@ from django.dispatch import receiver
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile')
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30,default="Some String")
+    last_name = models.CharField(max_length=30,default="Some String")
     bio = models.CharField(max_length=200)
     profile_pic = models.ImageField(upload_to='profile/')
     pub_date_created = models.DateTimeField(auto_now_add=True, null=True)
@@ -41,17 +41,18 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
-    image_name = models.CharField(max_length=30)
-    image_caption = models.CharField(max_length=30)
+    image_name = models.CharField(max_length=30,default="Some String")
+    image_caption = HTMLField(blank=True)
     image_location = models.CharField(max_length=30,null=True)
     
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True, null=True)
-    posted_time = models.DateTimeField(auto_now_add=True,)
+    post_date = models.DateTimeField(auto_now=True)
+
     likes = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['-posted_time']
+        ordering =('-post_date',)
 
     def save_images(self):
         self.save()
