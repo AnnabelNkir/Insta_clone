@@ -54,6 +54,12 @@ The user is expected to navigate seamlessly through the application.
 .Heroku
 
 ```
+
+## Live Link
+
+### <a href="https://instabelle.herokuapp.com/">Insta_clone application live link</a>
+
+
 ## Known Bugs
 There are no unresolved bugs in this code.
 
