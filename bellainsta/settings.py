@@ -75,7 +75,7 @@ LOGIN_REDIRECT_URL='index'
 SECRET_KEY = 'django-insecure-b($4vb%%a)-x$^g1yusr@$5h@^@o5gnf%tbt=^87t(qkg$q6l-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['instabelle.herokuapp.com']
 
