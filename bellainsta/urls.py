@@ -18,6 +18,12 @@ from django.contrib.auth import views
 from django.contrib import admin
 from django.urls import path,include
 from django_registration.backends.one_step.views import RegistrationView
+from django.conf.urls.static import static
+from django.conf import settings
+from . import views
+
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +33,7 @@ urlpatterns = [
     path('accounts/', include('django_registration.backends.one_step.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('logout/', views.logout_then_login, name='logout'), 
-    
+    path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.activate, name='activate'),
     
 ]
