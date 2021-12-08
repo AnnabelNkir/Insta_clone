@@ -41,7 +41,7 @@ The user is expected to navigate seamlessly through the application.
 + The user can upload the pictures to the application.
 + The user can see the profile with their pictures.
 + The user can follow other users and see their pictures on their timeline.
-+ Like a picture and comment on it.
++ The user can like a picture and comment on it.
 ```
 
 ## Technologies
