@@ -15,12 +15,6 @@ import django_heroku
 import dj_database_url
 from decouple import config,Csv
 
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_PORT = config('EMAIL_PORT')
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-
 
 MODE=config("MODE", default="dev")
 SECRET_KEY = config('SECRET_KEY')
@@ -75,7 +69,7 @@ LOGIN_REDIRECT_URL='index'
 SECRET_KEY = 'django-insecure-b($4vb%%a)-x$^g1yusr@$5h@^@o5gnf%tbt=^87t(qkg$q6l-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['instabelle.herokuapp.com']
 
@@ -86,6 +80,7 @@ INSTALLED_APPS = [
     'tinymce',
     'insta.apps.InstaConfig',
     'bootstrap4',
+    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
