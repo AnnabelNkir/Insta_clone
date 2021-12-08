@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'',include('insta.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^logout/$', views.LogoutView, {"next_page": '/'}),
-    url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^accounts/', include('django_registration.backends.simple.urls')),
 ]
