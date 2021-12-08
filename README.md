@@ -38,8 +38,8 @@ To view the app, open the live site link provided below on the README. Here is a
 The user is expected to navigate seamlessly through the application.
 ```
 + The user can sign in to the application.
-+ Upload my pictures to the application.
-+ See my profile with all my pictures.
++ The user can upload the pictures to the application.
++ The user can see the profile with all my pictures.
 + Follow other users and see their pictures on my timeline.
 + Like a picture and comment on it.
 ```
