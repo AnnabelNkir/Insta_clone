@@ -40,7 +40,7 @@ The user is expected to navigate seamlessly through the application.
 + The user can sign in to the application.
 + The user can upload the pictures to the application.
 + The user can see the profile with all my pictures.
-+ Follow other users and see their pictures on my timeline.
++ The user can follow other users and see their pictures on their timeline.
 + Like a picture and comment on it.
 ```
 
