@@ -11,14 +11,17 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
+from pathlib import Path
 import django_heroku
 import dj_database_url
 from decouple import config,Csv
-
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 MODE=config("MODE", default="dev")
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 # development
 if config('MODE')=="dev":
    DATABASES = {
@@ -43,7 +46,13 @@ else:
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+
+cloudinary.config(
+    cloud_name = config('CD_NAME'),
+    api_key= config('CD_API'),
+    api_secret=config('CD_SECRET'),
+    secure = config('CD_SECURE')
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -69,9 +78,9 @@ LOGIN_REDIRECT_URL='index'
 SECRET_KEY = 'django-insecure-b($4vb%%a)-x$^g1yusr@$5h@^@o5gnf%tbt=^87t(qkg$q6l-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['instabelle.herokuapp.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
