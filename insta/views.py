@@ -7,6 +7,11 @@ from django.contrib.auth.decorators import login_required
 from .forms import ImageForm, SignupForm, CommentForm, EditForm
 from django.db import models
 from .models import Image,Profile
+from cloudinary.models import CloudinaryField
+
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 # Create your views here.
 
 from django.contrib.auth import login, authenticate
