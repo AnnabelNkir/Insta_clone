@@ -1,5 +1,6 @@
 ![insta2](https://user-images.githubusercontent.com/87479148/145208707-a6ff6045-18b6-48ba-8fab-d19ec962033c.png)
-![insta3](https://user-images.githubusercontent.com/87479148/145208733-e1301d16-0c56-40ee-923e-bdf783263471.png)
+![insta3](https://user-images.githubusercontent.com/87479148/145208733-e1301d16-0c56-40ee-923e-bdf783263471.png)![insta4](https://user-images.githubusercontent.com/87479148/145209260-4fde6763-ddda-4da9-991a-e2d2ee96b8c4.png)
+
 ## Insta_Clone
 
 This is a django instagram clone. Instagram is photo and video sharing social networking platform.
