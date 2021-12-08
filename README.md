@@ -37,7 +37,7 @@ To view the app, open the live site link provided below on the README. Here is a
 
 The user is expected to navigate seamlessly through the application.
 ```
-+ The user can sign in to the application.
++ The user can sign in to the instaclone application.
 + The user can upload the pictures to the application.
 + The user can see the profile with their pictures.
 + The user can follow other users and see their pictures on their timelines.
