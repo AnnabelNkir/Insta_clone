@@ -77,7 +77,6 @@ ALLOWED_HOSTS = ['instabelle.herokuapp.com']
 # Application definition
 
 INSTALLED_APPS = [
-    'tinymce',
     'insta.apps.InstaConfig',
     'bootstrap4',
     'cloudinary',
