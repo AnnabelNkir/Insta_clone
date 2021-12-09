@@ -88,14 +88,3 @@ class Comments(models.Model):
         comments = Comments.objects.filter(image__pk = id)
         return comments
 
-class Likes(models.Model):
-        user_like = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
-        liked_post =models.ForeignKey(Image, on_delete=models.CASCADE, related_name='likes')
-
-        def save_like(self):
-                self.save()
-
-        def __str__(self):
-                return self.user_like
-
-
