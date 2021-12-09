@@ -147,7 +147,6 @@ def profiles(request,id):
     profile = Profile.objects.get(user_id=id)
     post=Image.objects.filter(user_id=id)
     Comment= Comments.objects.all()
-    user = User.objects.get(user_id=id)               
     return render(request,'profiles_each.html',{"profile":profile,"post":post})
 
 
