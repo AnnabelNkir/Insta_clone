@@ -25,7 +25,7 @@ Step 3 : Open the terminal, go to the project directory and run the following co
 + virtualenv venv
 + source venv/bin/activate
 
-Step 4 : Download the all dependencies in the requirements.txt using pip install -r requirements.txt
+Step 4 : Download the all dependencies in the requirements.txt using pip install -r requirements.txt.
 
 Step 5 : You can now launch the application locally by running the command python manage.py runserver and copying the link given on the terminal on your browser.
 
@@ -68,7 +68,7 @@ There are no unresolved bugs in this code.
 
 ## Support and contact details
 
-Incase of any query, need for collaboration or issues with this code, feel free to reach me at annabel.micheni@student.moringaschool or nkiroteannabel@gmail.com.
+Incase of any query/queries, need for collaboration or issues with this code, feel free to reach me at annabel.micheni@student.moringaschool or nkiroteannabel@gmail.com.
 
 
 ### MIT License
