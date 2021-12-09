@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns=[
-    url(r'^$', views.home, name='sign'),
+    url('^$', views.index, name='home'),
     url(r'^home/$',views.index,name='index'),
     url(r'^new/image$', views.new_image, name='new-image'),
     url(r'^profile/$',views.profile,name='profile'),
