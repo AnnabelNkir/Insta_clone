@@ -5,10 +5,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns=[
-    url(r'accounts/login/', auth_views.LoginView.as_view()),
+    # url(r'accounts/login/', auth_views.LoginView.as_view()),
     url('^$', views.index, name='home'),
     url(r'^home/$',views.index,name='index'),
     url(r'^new/image$', views.new_image, name='new-image'),
+    url(r'^likes/$', views.like_post, name='like_post'),
     url(r'^profile/$',views.profile,name='profile'),
     url(r'^search/', views.search_results, name='search_results'),
     url(r'^comment/(?P<image_id>\d+)', views.comment, name='comment'),

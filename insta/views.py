@@ -73,6 +73,7 @@ def profile(request):
     profile = Profile.objects.get(user=current_user.id)
     print(profile.profile_pic)
     posts = Image.objects.filter(user=current_user)
+    
     if request.method == 'POST':
         signup_form = EditForm(request.POST, request.FILES,instance=request.user.profile) 
         if signup_form.is_valid():
@@ -115,3 +116,9 @@ def profiles(request,id):
     post=Image.objects.filter(user_id=id)
                        
     return render(request,'profiles_each.html',{"profile":profile,"post":post})
+
+@login_required(login_url='/accounts/login/')
+def like_post(request):
+    image = get_object_or_404(Image, id=request.POST.get('image_id'))
+    image.likes.add(request.user)
+    return redirect('home')
