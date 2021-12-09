@@ -12,7 +12,7 @@ urlpatterns=[
     url(r'^comment/(?P<image_id>\d+)', views.comment, name='comment'),
     url(r'^profiles/(\d+)',views.profiles,name='profiles'),
     url(r'^signup/$', views.signup, name='signup'),
-    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$',
         views.activate, name='activate'),
 ]
 if settings.DEBUG:

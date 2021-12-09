@@ -15,6 +15,7 @@ import cloudinary.api
 # Create your views here.
 
 from django.contrib.auth import login, authenticate
+from .forms import SignupForm
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -51,8 +52,19 @@ def signup(request):
 
 
 def activate(request, uidb64, token):
-    context = {'uidb64':uidb64, 'token':token}
-    return render(request, 'templates/acc_active_email.html', context)
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        # return redirect('home')
+        return HttpResponse('Thank you for your email confirmation. Now you can <a href="/accounts/login/">Login</a>  your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 def home(request):
     date = dt.date.today()
