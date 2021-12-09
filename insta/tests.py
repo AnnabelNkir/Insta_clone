@@ -48,7 +48,7 @@ class ImageTestClass(TestCase):
         self.profile = Profile(bio='This is my bio')
         self.profile.save_profile()
         #creating an new image 
-        self.image = Image(post='test.jpg',caption='Fun times with bae', posted_on='Monday', profile=self.profile)
+        self.image = Image(post='test.jpg',caption='Caffeinated', posted_on='Saturday', profile=self.profile)
 
     def test_instance(self):
         self.assertTrue(isinstance(self.image, Image))
@@ -74,9 +74,9 @@ class ImageTestClass(TestCase):
         Function to test that an image's details can be updated
         """
         self.image.save_img()
-        new_image = Image.objects.filter(caption='Fun times with bae').update(caption='Fun times')
-        images = Image.objects.get(caption='Fun times')
-        self.assertTrue(images.caption, 'Fun times')
+        new_image = Image.objects.filter(caption='Caffeinated').update(caption='Caffeinated')
+        images = Image.objects.get(caption='Code')
+        self.assertTrue(images.caption, 'Code')
     
 
 class CommentsTestClass(TestCase):
@@ -89,10 +89,10 @@ class CommentsTestClass(TestCase):
         self.profile = Profile(bio='This is my bio')
         self.profile.save_profile()
         #creating an new image and saving it
-        self.image = Image(post='test.jpg',caption='Fun times with bae', posted_on='Monday', profile=self.profile)
+        self.image = Image(post='test.jpg',caption='Adventure', posted_on='Saturday', profile=self.profile)
         self.image.save_img()
         #creating a new comment and saving it
-        self.comm = Comments(comment='lol', posted_on='Monday', image=self.image)
+        self.comm = Comments(comment='lovely', posted_on='', image=self.image)
 
     def test_instance(self):
         self.assertTrue(isinstance(self.comm, Comments))
