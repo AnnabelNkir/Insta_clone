@@ -117,8 +117,3 @@ def profiles(request,id):
                        
     return render(request,'profiles_each.html',{"profile":profile,"post":post})
 
-@login_required(login_url='/accounts/login/')
-def like_post(request):
-    image = get_object_or_404(Image, id=request.POST.get('image_id'))
-    image.likes.add(request.user)
-    return redirect('home')
