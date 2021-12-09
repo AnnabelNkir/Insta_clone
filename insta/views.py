@@ -81,10 +81,7 @@ def index(request):
     profiles = Profile.objects.all()
     # print(profiles)
     form = CommentForm()
-    images = Image.get_images().order_by('-posted_on')
-    profiles = User.objects.all()
-    
-
+   
     return render(request, 'all-posts/index.html', {"date": date, "photos":photos, "profiles":profiles, "form":form})
 
 def new_image(request):
