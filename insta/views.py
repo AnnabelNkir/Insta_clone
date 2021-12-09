@@ -6,9 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import ImageForm, SignupForm, CommentForm, EditForm
 from django.db import models
-from .models import Image,Profile, Like
+from .models import Comments, Image,Profile, Likes
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import Follow
 
 import cloudinary
 import cloudinary.uploader
@@ -81,6 +82,11 @@ def index(request):
     profiles = Profile.objects.all()
     # print(profiles)
     form = CommentForm()
+    images = Image.get_images().order_by('-posted_on')
+    profiles = User.objects.all()
+    people = Follow.objects.following(request.user)
+    comments = Comments.objects.all()
+    likes = Likes.objects.all()
 
     return render(request, 'all-posts/index.html', {"date": date, "photos":photos, "profiles":profiles, "form":form})
 
@@ -148,26 +154,31 @@ def search_results(request):
 def profiles(request,id):
     profile = Profile.objects.get(user_id=id)
     post=Image.objects.filter(user_id=id)
-                       
+    Comment= Comments.objects.all()
+    user = User.objects.get(user_id=id)
+    follow = len(Follow.objects.followers(user))
+    following = len(Follow.objects.following(user))
+    people = Follow.objects.following(request.user)                 
     return render(request,'profiles_each.html',{"profile":profile,"post":post})
 
 
+@login_required(login_url='/accounts/login/')
 def like_image(request):
-    user = request.user
-    if request.method == 'POST':
-        image_id = request.POST.get('image_id')
-        image_pic =Image.objects.get(id=image_id)
-        if user in image_pic.liked.all():
-            image_pic.liked.add(user)
-        else:
-            image_pic.liked.add(user)    
-            
-        like,created =Like.objects.get_or_create(user=user, image_id=image_id)
-        if not created:
-            if like.value =='Like':
-               like.value = 'Unlike'
-        else:
-               like.value = 'Like'
+    image = get_object_or_404(Image, id=request.POST.get('image_id'))
+    image.likes.add(request.user)
+    return redirect('home')
 
-        like.save()       
-    return redirect('index')
+@login_required(login_url='/accounts/login/')
+def follow(request,user_id):
+    other_user = User.objects.get(id = user_id)
+    follow = Follow.objects.add_follower(request.user, other_user)
+
+    return redirect('home')
+
+@login_required(login_url='/accounts/login/')
+def unfollow(request,user_id):
+    other_user = User.objects.get(id = user_id)
+
+    follow = Follow.objects.remove_follower(request.user, other_user)
+
+    return redirect('home')
