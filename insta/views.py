@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import ImageForm, SignupForm, CommentForm, EditForm
 from django.db import models
-from .models import Image,Profile,Likes,a
+from .models import Image,Profile
 from cloudinary.models import CloudinaryField
 
 import cloudinary
