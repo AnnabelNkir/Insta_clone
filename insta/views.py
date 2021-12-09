@@ -9,7 +9,6 @@ from django.db import models
 from .models import Comments, Image,Profile, Likes
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Follow
 
 import cloudinary
 import cloudinary.uploader
@@ -84,9 +83,7 @@ def index(request):
     form = CommentForm()
     images = Image.get_images().order_by('-posted_on')
     profiles = User.objects.all()
-    people = Follow.objects.following(request.user)
-    comments = Comments.objects.all()
-    likes = Likes.objects.all()
+    
 
     return render(request, 'all-posts/index.html', {"date": date, "photos":photos, "profiles":profiles, "form":form})
 
@@ -155,10 +152,7 @@ def profiles(request,id):
     profile = Profile.objects.get(user_id=id)
     post=Image.objects.filter(user_id=id)
     Comment= Comments.objects.all()
-    user = User.objects.get(user_id=id)
-    follow = len(Follow.objects.followers(user))
-    following = len(Follow.objects.following(user))
-    people = Follow.objects.following(request.user)                 
+    user = User.objects.get(user_id=id)               
     return render(request,'profiles_each.html',{"profile":profile,"post":post})
 
 
@@ -168,17 +162,4 @@ def like_image(request):
     image.likes.add(request.user)
     return redirect('home')
 
-@login_required(login_url='/accounts/login/')
-def follow(request,user_id):
-    other_user = User.objects.get(id = user_id)
-    follow = Follow.objects.add_follower(request.user, other_user)
 
-    return redirect('home')
-
-@login_required(login_url='/accounts/login/')
-def unfollow(request,user_id):
-    other_user = User.objects.get(id = user_id)
-
-    follow = Follow.objects.remove_follower(request.user, other_user)
-
-    return redirect('home')
