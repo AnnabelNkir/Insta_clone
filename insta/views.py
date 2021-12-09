@@ -66,14 +66,9 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
-def home(request):
-    date = dt.date.today()
-    
-    return render(request, 'registration/homepage.html', {"date": date,})
 
 
-
-@login_required(login_url='/home')
+@login_required(login_url='/index')
 def index(request):
     date = dt.date.today()
     photos = Image.objects.all()
