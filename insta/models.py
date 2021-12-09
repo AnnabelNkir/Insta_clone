@@ -1,3 +1,4 @@
+from _typeshed import Self
 from django.db import models
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
@@ -19,9 +20,11 @@ class Profile(models.Model):
 
     def save_profile(self):
         self.save()
+        return self.save()
 
     def delete_profile(self):
         self.delete()
+        return self.delete_profile()
 
     @classmethod
     def get_profiles(cls):
@@ -57,9 +60,11 @@ class Image(models.Model):
 
     def save_images(self):
         self.save()
+        return self.save()
     
     def del_img(self):
-                self.delete()
+          self.delete()
+          return self.delete()
     
     @classmethod
     def get_images(cls):
