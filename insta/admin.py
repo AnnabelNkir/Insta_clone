@@ -6,4 +6,3 @@ from .models import Comments, Likes, Profile,Image
 admin.site.register(Profile)
 admin.site.register(Image)
 admin.site.register(Comments)
-admin.site.register(Likes)

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import ImageForm, SignupForm, CommentForm, EditForm
 from django.db import models
-from .models import Comments, Image,Profile, Likes
+from .models import Comments, Image,Profile
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.decorators import login_required, user_passes_test
 
@@ -156,10 +156,6 @@ def profiles(request,id):
     return render(request,'profiles_each.html',{"profile":profile,"post":post})
 
 
-@login_required(login_url='/accounts/login/')
-def like_image(request):
-    image = get_object_or_404(Image, id=request.POST.get('image_id'))
-    image.likes.add(request.user)
-    return redirect('home')
+
 
 
