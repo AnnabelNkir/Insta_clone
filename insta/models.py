@@ -1,5 +1,4 @@
 from django.db import models
-import datetime as dt
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
 from django.db.models.signals import post_save
@@ -40,7 +39,6 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
     image_name = models.CharField(max_length=30,default="Some String")
@@ -56,12 +54,11 @@ class Image(models.Model):
     class Meta:
         ordering =('-post_date',)
 
-
-def save_images(self):
+    def save_images(self):
         self.save()
     
-@classmethod
-def get_images(cls):
+    @classmethod
+    def get_images(cls):
         images = cls.objects.all()
         return images
 
@@ -81,6 +78,3 @@ class Comments(models.Model):
     def get_comments_by_images(cls, id):
         comments = Comments.objects.filter(image__pk = id)
         return comments
-
-    
-   
