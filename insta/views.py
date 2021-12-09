@@ -93,9 +93,7 @@ def new_image(request):
             image = form.save(commit=False)
             image.user = current_user
             image.profile = profile
-            image_file = request.FILES['image_file']
-            image_file = CloudinaryField.uploader.upload(image_file)
-            image.save_image()
+            image.save()
         return redirect('index')
 
     else:
