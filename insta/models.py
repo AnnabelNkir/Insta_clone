@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from tinymce.models import HTMLField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class Profile(models.Model):
@@ -39,17 +40,17 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
 class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
+    image = CloudinaryField('image')
     image_name = models.CharField(max_length=30,default="Some String")
     image_caption = models.CharField(max_length = 300)
     image_location = models.CharField(max_length=30,null=True)
-    
+    likes= models.ManyToManyField(User,default=None,blank=True,related_name='liked')
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True, null=True)
     post_date = models.DateTimeField(auto_now=True)
 
-    likes = models.PositiveIntegerField(default=5)
 
     class Meta:
         ordering =('-post_date',)
@@ -61,6 +62,9 @@ class Image(models.Model):
     def get_images(cls):
         images = cls.objects.all()
         return images
+    @property
+    def saved_likes(self):
+      return self.likes.count()
 
 class Comments(models.Model):
     comment = models.CharField(max_length = 300)
@@ -78,3 +82,15 @@ class Comments(models.Model):
     def get_comments_by_images(cls, id):
         comments = Comments.objects.filter(image__pk = id)
         return comments
+LIKE_CHOICES={
+    ('Like','Like'),
+    ('Unlike','Unlike',)
+}
+
+class Like(models.Model):
+ image = models.ForeignKey(Image, on_delete=models.CASCADE)
+user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+value = models.CharField(choices=LIKE_CHOICES,default='like',max_length=10)
+
+def _str_(self):
+        return self.value

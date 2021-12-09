@@ -6,11 +6,17 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import ImageForm, SignupForm, CommentForm, EditForm
 from django.db import models
-from .models import Image,Profile
+from .models import Image,Profile, Like
+from cloudinary.models import CloudinaryField
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 # Create your views here.
 
 from django.contrib.auth import login, authenticate
-
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -87,7 +93,9 @@ def new_image(request):
             image = form.save(commit=False)
             image.user = current_user
             image.profile = profile
-            image.save()
+            image_file = request.FILES['image_file']
+            image_file = CloudinaryField.uploader.upload(image_file)
+            image.save_image()
         return redirect('index')
 
     else:
@@ -142,3 +150,24 @@ def profiles(request,id):
     post=Image.objects.filter(user_id=id)
                        
     return render(request,'profiles_each.html',{"profile":profile,"post":post})
+
+
+def like_image(request):
+    user = request.user
+    if request.method == 'POST':
+        image_id = request.POST.get('image_id')
+        image_pic =Image.objects.get(id=image_id)
+        if user in image_pic.liked.all():
+            image_pic.liked.add(user)
+        else:
+            image_pic.liked.add(user)    
+            
+        like,created =Like.objects.get_or_create(user=user, image_id=image_id)
+        if not created:
+            if like.value =='Like':
+               like.value = 'Unlike'
+        else:
+               like.value = 'Like'
+
+        like.save()       
+    return redirect('index')
