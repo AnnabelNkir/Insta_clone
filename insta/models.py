@@ -55,10 +55,7 @@ class Image(models.Model):
 
     class Meta:
         ordering =('-post_date',)
-@property
-def count_likes(self):
-                likes = self.likes.count()
-                return likes
+
 
 def save_images(self):
         self.save()
