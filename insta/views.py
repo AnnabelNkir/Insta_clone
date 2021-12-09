@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import ImageForm, SignupForm, CommentForm, EditForm
 from django.db import models
-from .models import Image,Profile
+from .models import Image,Profile,Likes,a
 from cloudinary.models import CloudinaryField
 
 import cloudinary
@@ -14,8 +14,7 @@ import cloudinary.uploader
 import cloudinary.api
 # Create your views here.
 
-from django.contrib.auth import login, authenticate
-from .forms import SignupForm
+from django.contrib.auth import authenticate, login
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -24,12 +23,22 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
+def my_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        # Redirect to a success page.
+        ...
+    else:
+        # Return an 'invalid login' error message.
+        ...
+
 def home(request):
     date = dt.date.today()
     
     return render(request, 'registration/homepage.html', {"date": date,})
-
-
 
 @login_required(login_url='/home')
 def index(request):

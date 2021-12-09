@@ -1,9 +1,11 @@
 from django.conf.urls import url
 from . import views
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns=[
+    url(r'accounts/login/', auth_views.LoginView.as_view()),
     url('^$', views.index, name='home'),
     url(r'^home/$',views.index,name='index'),
     url(r'^new/image$', views.new_image, name='new-image'),
