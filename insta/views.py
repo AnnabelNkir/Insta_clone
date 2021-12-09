@@ -68,7 +68,7 @@ def activate(request, uidb64, token):
 
 
 
-@login_required(login_url='/accounts/register')
+@login_required(login_url='/accounts/login')
 def index(request):
     date = dt.date.today()
     photos = Image.objects.all()
