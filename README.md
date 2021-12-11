@@ -21,7 +21,7 @@ Step 2 : The repository, if downloaded as a .zip file will need to be extracted 
 
 Step 3 : Open the terminal, go to the project directory and run the following commands: 
 
-+ pip install virtualenv
++ pip install virtualenv then
 + virtualenv venv
 + source venv/bin/activate
 
