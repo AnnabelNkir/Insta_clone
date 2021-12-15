@@ -19,7 +19,7 @@ Step 1 : Clone this repository using git clone https://github.com/AnnabelNkir/In
 
 Step 2 : The repository, if downloaded as a .zip file will need to be extracted to your preferred location and opened.
 
-Step 3 : Open the terminal, go to the project directory and run the following commands: 
+Step 3 : Open the terminal, go to the project directory and run the following: 
 
 + pip install virtualenv then
 + virtualenv venv
